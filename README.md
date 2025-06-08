@@ -1,6 +1,6 @@
 # Agentic AI Project Collection
 
-This repository contains 5 diverse Python projects showcasing different aspects of automation, web scraping, data processing, and computer vision. Each project demonstrates practical applications of AI and automation technologies.
+This repository contains 5 diverse Python projects showcasing different aspects of automation, web scraping, data processing, and computer vision. Each project demonstrates practical applications of AI and automation technologies. **All projects are written by AI using cursor**
 
 ## 📋 Projects Overview
 
