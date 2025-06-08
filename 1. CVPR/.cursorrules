@@ -1,0 +1,17 @@
+For any problem, plan first, then execute.
+If you encounter any issues during execution, record lessons learned in the .knowledge file.
+Check the .knowledge file before running to avoid repeating mistakes.
+
+# Python
+
+See if .venv exists. If it doesn’t exist, create one first using `uv venv`
+
+When installing with pip, use the following command: `uv pip install`
+
+If there is no requirements.txt file, create one. If it exists, add new dependencies to it.
+
+When creating requirements.txt, avoid lock version numbers, try to use the most recent version of the package
+
+When running Python code, use the following command: `uv run script.py`
+
+When creating python script, try to write your code in function and make it executable with parameters from command line for future use 

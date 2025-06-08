@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine Redirect Bookmarklet</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .bookmarklet-code {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 15px 0;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .copy-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .copy-button:hover {
+            background: #0056b3;
+        }
+        .success-message {
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+        .instructions {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .supported-engines {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .engine-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .arrow {
+            font-size: 20px;
+            color: #007bff;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Search Engine Redirect Bookmarklet</h1>
+        
+        <p>This bookmarklet captures your current search query and redirects it to an alternative search engine. Perfect for comparing search results across different platforms!</p>
+        
+        <div class="instructions">
+            <h3>📋 How to Install:</h3>
+            <ol>
+                <li>Copy the bookmarklet code below</li>
+                <li>Create a new bookmark in your browser</li>
+                <li>Paste the code as the bookmark URL</li>
+                <li>Name it something like "Search Redirect"</li>
+                <li>Use it on any search engine page!</li>
+            </ol>
+        </div>
+        
+        <h3>📝 Bookmarklet Code:</h3>
+        <div class="bookmarklet-code" id="bookmarkletCode">javascript:(function(){const e=window.location.href,t=new URL(e),n=t.hostname.toLowerCase(),r={'www.google.com':{param:'q',name:'Google'},'google.com':{param:'q',name:'Google'},'www.bing.com':{param:'q',name:'Bing'},'bing.com':{param:'q',name:'Bing'},'search.yahoo.com':{param:'p',name:'Yahoo'},'yahoo.com':{param:'p',name:'Yahoo'},'duckduckgo.com':{param:'q',name:'DuckDuckGo'},'www.baidu.com':{param:'wd',name:'Baidu'},'baidu.com':{param:'wd',name:'Baidu'}},o={Google:'https://www.baidu.com/s?wd=',Bing:'https://www.google.com/search?q=',Yahoo:'https://duckduckgo.com/?q=',DuckDuckGo:'https://www.google.com/search?q=',Baidu:'https://www.google.com/search?q='};let a=null,s=null;for(const[e,t]of Object.entries(r))if(n.includes(e.replace('www.',''))||n===e){a=t.name,s=t.param;break}if(!a)return void alert('This bookmarklet only works on supported search engines (Google, Bing, Yahoo, DuckDuckGo, Baidu)');const c=t.searchParams.get(s);if(!c)return void alert('No search query found in the current URL');const l=o[a];if(!l)return void alert('No alternative search engine configured for '+a);const i=l+encodeURIComponent(c);window.open(i,'_blank')})();</div>
+        
+        <button class="copy-button" onclick="copyBookmarklet()">📋 Copy Bookmarklet</button>
+        <div class="success-message" id="successMessage">✅ Copied to clipboard!</div>
+        
+        <h3>🔄 Supported Search Engine Redirects:</h3>
+        <div class="supported-engines">
+            <div class="engine-card">
+                <strong>Google</strong>
+                <div class="arrow">↓</div>
+                <span>Baidu</span>
+            </div>
+            <div class="engine-card">
+                <strong>Bing</strong>
+                <div class="arrow">↓</div>
+                <span>Google</span>
+            </div>
+            <div class="engine-card">
+                <strong>Yahoo</strong>
+                <div class="arrow">↓</div>
+                <span>DuckDuckGo</span>
+            </div>
+            <div class="engine-card">
+                <strong>DuckDuckGo</strong>
+                <div class="arrow">↓</div>
+                <span>Google</span>
+            </div>
+            <div class="engine-card">
+                <strong>Baidu</strong>
+                <div class="arrow">↓</div>
+                <span>Google</span>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>🚀 How to Use:</h3>
+            <ol>
+                <li>Go to any supported search engine (Google, Bing, Yahoo, DuckDuckGo, or Baidu)</li>
+                <li>Perform a search</li>
+                <li>Click your bookmarklet</li>
+                <li>A new tab will open with the same search on the alternative engine!</li>
+            </ol>
+        </div>
+        
+        <div class="instructions">
+            <h3>⚡ Example Usage:</h3>
+            <p><strong>You're on:</strong> https://www.google.com/search?q=javascript+tutorials</p>
+            <p><strong>Bookmarklet opens:</strong> https://www.baidu.com/s?wd=javascript+tutorials</p>
+        </div>
+    </div>
+
+    <script>
+        function copyBookmarklet() {
+            const code = document.getElementById('bookmarkletCode').textContent;
+            navigator.clipboard.writeText(code).then(function() {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }).catch(function(err) {
+                alert('Failed to copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html> 
