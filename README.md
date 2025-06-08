@@ -18,6 +18,11 @@ A web scraping tool that extracts paper information from the CVPR (Computer Visi
 
 **Technologies**: Python, BeautifulSoup, HTML parsing, JSON processing
 
+```
+cd 1. CVPR
+uv pip install -r requirements.txt
+uv run extract_cvpr_papers.py 
+```
 ---
 
 ### 2. Instagram Media Downloader 📸
@@ -50,6 +55,13 @@ A sophisticated Instagram media downloader built with Playwright that simulates 
 
 **Note**: This tool uses browser automation (not web scraping APIs) and is designed for educational purposes. Use in compliance with Instagram's Terms of Service.
 
+```
+cd 2. Instagram
+uv pip install -r requirements.txt
+playwright install
+uv run instagram_scrape.py 
+```
+
 ---
 
 ### 3. Search Engine Redirect Bookmarklet 🔍
@@ -73,7 +85,11 @@ A JavaScript bookmarklet that captures search queries from one search engine and
 - DuckDuckGo → Google
 - Baidu → Google
 
+Add `bookmarklet-minified.js` to the browser bookmark 
+
 ---
+
+
 
 ### 4. ImageChat - AI Vision Analysis 🖼️
 **Location**: `4. ImageChat/`
@@ -99,7 +115,15 @@ A powerful image analysis application leveraging OpenAI's GPT-4 Vision API. This
 - Visual question answering
 - Research and data analysis
 
+
+```
+cd 4. ImageChat
+echo "OPENAI_API_KEY=Your_api_key_here" >> .env
+uv pip install -r requirements.txt
+uv run src/main.py your_pic.jpg -p "what is the content of the image"
+```
 ---
+
 
 ### 5. PiChallenge - Automated Drawing 🎨
 **Location**: `5. PiChallenge/`
@@ -121,50 +145,11 @@ An automation script that uses pyautogui to draw perfect circles in graphics app
 - Educational tool for programming concepts
 - Accessibility assistance for drawing applications
 
----
-
-## 🚀 Getting Started
-
-Each project has its own requirements and setup instructions. Navigate to the individual project directories for detailed installation and usage guides.
-
-### General Prerequisites
-- Python 3.8+ (for Python projects)
-- Modern web browser (for bookmarklet)
-- Individual project dependencies (see each project's `requirements.txt`)
-
-### Quick Setup Template
-```bash
-# Navigate to desired project
-cd "1. CVPR"  # or any other project
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the project (varies by project)
-python main_script.py
+```
+cd "5. PiChallenge"
+uv pip install -r requirements.txt
+uv run draw.py
 ```
 
-## 🛡️ Important Notes
+---
 
-- **Ethics**: All tools should be used responsibly and in compliance with respective service terms
-- **Rate Limits**: Web scraping projects include rate limiting to be respectful to servers
-- **Privacy**: Only process public data and respect privacy guidelines
-- **Education**: These projects are primarily for educational and research purposes
-
-## 📄 License
-
-Each project may have its own licensing terms. Please refer to individual project directories for specific license information.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-For project-specific contributions, refer to the individual project documentation. 
