@@ -1,147 +1,227 @@
-# Instagram Picture Downloader
+# Instagram Media Downloader with Playwright
 
-A Python script to download pictures from Instagram profiles using multiple methods and robust error handling.
+A sophisticated Instagram media downloader that uses Playwright to simulate real browser behavior and bypass anti-bot measures. Features intelligent cookie management, carousel post support, and efficient async downloading.
 
 ## 🚀 Features
 
-- **Multiple Download Methods**: Choose from different approaches based on your needs
-- **Rate Limiting Protection**: Built-in delays to avoid Instagram's restrictions
-- **Command-line Interface**: Easy to use with various options
-- **Error Recovery**: Handles common Instagram API issues gracefully
-- **Metadata Support**: Option to save post metadata along with images
+- **Playwright Browser Automation**: Simulates real user interactions instead of direct API calls
+- **Cookie Persistence**: Saves login session to avoid repeated logins (30-day validity)
+- **Carousel Post Support**: Clicks into individual posts to extract all images from multi-image posts
+- **Intelligent Scrolling**: Automatically scrolls to load more content from profiles
+- **Two Download Modes**:
+  - **Grid Mode** (`instagram_scrape.py`): Downloads from profile grid view
+  - **Carousel Mode** (`instagram_downloader_carousel.py`): Enhanced extraction by clicking into posts
+- **Async Downloads**: Efficient parallel downloading with aiohttp
+- **Rate Limiting**: Built-in delays to respect Instagram's restrictions
+- **Headless/Visible Modes**: Can run with or without browser window
+- **Error Recovery**: Robust error handling and retry mechanisms
 
-## 📋 Available Methods
+## 📋 Requirements
 
-### 1. instaloader (Recommended)
-- **Best for**: Public profiles, reliable downloads
-- **Pros**: Handles Instagram's restrictions, saves metadata
-- **Cons**: May hit rate limits, requires patience
-
-### 2. requests (Basic/Educational)
-- **Best for**: Learning, experimentation
-- **Pros**: Fast, lightweight
-- **Cons**: Instagram actively blocks this, needs constant updates
-
-### 3. selenium (Future Implementation)
-- **Best for**: Private profiles (with login), complex scenarios
-- **Pros**: Works like real browser, handles dynamic content
-- **Cons**: Slower, requires browser driver
+- Python 3.8+
+- Modern browser (Chromium will be installed by Playwright)
+- Dependencies listed in `requirements.txt`:
+  - `playwright` - Browser automation
+  - `aiohttp` - Async HTTP client for downloads
+  - `requests` - HTTP requests
+  - `pillow` - Image processing
+  - `argparse` - Command-line interface
 
 ## 🛠️ Installation
 
-1. **Create virtual environment** (using uv):
+1. **Navigate to project directory**:
    ```bash
-   uv venv
+   cd "2. Instagram"
    ```
 
-2. **Install dependencies**:
+2. **Install Python dependencies**:
    ```bash
    uv pip install -r requirements.txt
+   # or with regular pip:
+   pip install -r requirements.txt
+   ```
+
+3. **Install Playwright browser**:
+   ```bash
+   playwright install
    ```
 
 ## 📖 Usage
 
-### Basic Usage
+### Basic Grid Mode (instagram_scrape.py)
 
-Download 5 pictures from a profile:
+Downloads images from the profile grid view:
+
 ```bash
-uv run instagram_downloader_v2.py --username grapeot --count 5
+# Download 5 images from a username
+uv run instagram_scrape.py --username grapeot --count 5
+
+# Download from URL
+uv run instagram_scrape.py --url https://www.instagram.com/grapeot/ --count 10
+
+# Show browser window (useful for debugging)
+uv run instagram_scrape.py --username grapeot --count 5 --show-browser
+
+# Force login first
+uv run instagram_scrape.py --username grapeot --count 10 --login --show-browser
 ```
 
-Download from URL:
+### Enhanced Carousel Mode (instagram_downloader_carousel.py)
+
+Downloads more images by clicking into posts to extract carousel images:
+
 ```bash
-uv run instagram_downloader_v2.py --url https://www.instagram.com/grapeot/ --count 5
+# Download up to 100 images including carousel images
+uv run instagram_downloader_carousel.py --username grapeot --count 100 --show-browser
+
+# Use with login for better access
+uv run instagram_downloader_carousel.py --username grapeot --count 200 --login
 ```
 
-### Advanced Options
+### Command Line Options
 
-Download with videos:
-```bash
-uv run instagram_downloader_v2.py --username grapeot --count 10 --download-videos
-```
-
-Specify output directory:
-```bash
-uv run instagram_downloader_v2.py --username grapeot --output-dir ./my_downloads
-```
-
-Use different method:
-```bash
-uv run instagram_downloader_v2.py --username grapeot --method requests
-```
-
-View all available methods:
-```bash
-uv run instagram_downloader_v2.py --method info
-```
-
-### Command Line Arguments
-
-| Argument | Short | Description | Default |
-|----------|-------|-------------|---------|
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
 | `--username` | `-u` | Instagram username | Required* |
 | `--url` | | Instagram profile URL | Required* |
-| `--count` | `-c` | Number of posts to download | 5 |
-| `--method` | `-m` | Download method (`instaloader`, `requests`, `info`) | `instaloader` |
-| `--download-videos` | | Include videos in download | False |
+| `--count` | `-c` | Number of images to download | 5 (grid), 50 (carousel) |
 | `--output-dir` | `-o` | Output directory | `downloads` |
+| `--show-browser` | | Show browser window | Hidden |
+| `--login` | | Force login to Instagram | Auto-detect |
+| `--no-cookies` | | Disable cookie saving/loading | Enabled |
+| `--clear-cookies` | | Clear saved cookies and exit | N/A |
 
 *Either `--username` or `--url` is required
+
+### Cookie Management
+
+The downloader automatically manages Instagram login cookies:
+
+```bash
+# Clear saved cookies
+uv run instagram_scrape.py --clear-cookies
+
+# Force login without using saved cookies
+uv run instagram_scrape.py --username grapeot --no-cookies --login --show-browser
+```
+
+## 🎯 How It Works
+
+### Grid Mode (`instagram_scrape.py`)
+1. **Browser Launch**: Starts Chromium with realistic user agent
+2. **Cookie Loading**: Attempts to load saved login cookies
+3. **Login Handling**: Prompts for manual login if needed (saves cookies)
+4. **Profile Navigation**: Goes to Instagram profile page
+5. **Content Loading**: Scrolls page to load more posts
+6. **Image Extraction**: Finds and extracts image URLs from grid
+7. **Async Download**: Downloads images in parallel with rate limiting
+
+### Carousel Mode (`instagram_downloader_carousel.py`)
+1. **Profile Analysis**: Same initial steps as Grid Mode
+2. **Post Discovery**: Finds all post links on the profile
+3. **Post Navigation**: Clicks into each individual post
+4. **Carousel Extraction**: Navigates through carousel images in each post
+5. **Enhanced Collection**: Collects significantly more images per profile
+6. **Bulk Download**: Downloads all collected images
+
+### Cookie System
+- **Automatic Saving**: Cookies saved after successful login
+- **30-Day Validity**: Cookies expire after 30 days
+- **Session Persistence**: Avoid repeated logins for the same account
+- **Secure Storage**: Stored in local JSON file (`instagram_cookies.json`)
+
+## 📁 Output Structure
+
+Downloaded images are organized as:
+```
+downloads/
+└── username/
+    ├── username_1234567890_1.jpg
+    ├── username_1234567890_2.jpg
+    └── username_carousel_1234567890_3.jpg  # From carousel mode
+```
+
+Filename format: `{username}_{timestamp}_{index}.jpg`
 
 ## 🔧 Troubleshooting
 
 ### Common Issues
 
-1. **Rate Limiting (403/401 errors)**
-   - Wait a few minutes between attempts
-   - Use smaller batch sizes (`--count 3`)
-   - Instagram increasingly restricts anonymous access
-
-2. **Profile Not Found**
-   - Verify the username is correct
-   - Check if the profile is public
-   - Some profiles may require login
-
-3. **Download Failures**
-   - Try with a different method
-   - Check your internet connection
-   - Consider using a VPN if blocked
-
-### Tips for Success
-
-- **Start small**: Begin with `--count 5` or less
-- **Be patient**: Add delays between downloads
-- **Respect limits**: Don't abuse Instagram's servers
-- **Check Terms**: Follow Instagram's Terms of Service
-
-## 📁 Output Structure
-
-Downloaded files are organized as:
+**1. Login Required**
+```bash
+# Solution: Use login mode with visible browser
+uv run instagram_scrape.py --username grapeot --login --show-browser
 ```
-downloads/
-└── username/
-    ├── 2024-01-01_12-34-56_UTC.jpg
-    ├── 2024-01-01_12-34-56_UTC.json  (metadata)
-    └── ...
+
+**2. No Images Found**
+- Profile might be private
+- Instagram may be blocking access
+- Try with `--login` and `--show-browser`
+
+**3. Download Failures**
+- Check internet connection
+- Instagram may have rate-limited your IP
+- Try with longer delays or smaller batch sizes
+
+**4. Browser Issues**
+```bash
+# Reinstall Playwright browser
+playwright install --force
 ```
+
+### Success Tips
+
+- **Start Small**: Begin with `--count 5` to test
+- **Use Login**: Login provides better access to content
+- **Be Patient**: Use appropriate delays between requests
+- **Monitor Progress**: Use `--show-browser` to see what's happening
+- **Respect Limits**: Don't abuse Instagram's servers
 
 ## ⚠️ Important Notes
 
-- **Instagram's Terms**: Always respect Instagram's Terms of Service
-- **Rate Limits**: Instagram actively prevents automated access
-- **Privacy**: Only download from public profiles you have permission to access
-- **Personal Use**: This tool is intended for personal, educational, or research purposes
+- **Instagram Terms of Service**: Always comply with Instagram's terms
+- **Rate Limiting**: Built-in delays to be respectful to Instagram's servers
+- **Public Content Only**: Only download from public profiles you have permission to access
+- **Educational Purpose**: This tool is for educational and research purposes
+- **No Warranty**: Use at your own risk - Instagram frequently changes their anti-bot measures
 
-## 🐛 Known Issues
+## 🐛 Known Limitations
 
-- Instagram frequently changes their API, which may break some methods
-- Rate limiting is increasingly strict
-- Some profiles may require authentication even if public
+- Instagram actively prevents automated access
+- Some profiles may require login even if public
+- Rate limiting becomes stricter over time
+- Carousel mode is slower but gets more images
+- Browser detection may occasionally fail
 
-## 📝 License
+## 📝 Technical Details
 
-This project is for educational purposes. Users are responsible for complying with Instagram's Terms of Service and applicable laws.
+**Dependencies**:
+- `playwright`: Browser automation framework
+- `aiohttp`: Async HTTP client for efficient downloads
+- `requests`: Backup HTTP functionality
+- `pillow`: Image processing capabilities
+- `argparse`: Command-line argument parsing
+
+**Browser Settings**:
+- Realistic user agent strings
+- Disabled automation detection
+- Standard viewport size (1366x768)
+- Proper cookie handling
+
+**Performance**:
+- Async downloads for speed
+- Intelligent scrolling algorithms
+- Memory-efficient image processing
+- Configurable rate limiting
 
 ## 🤝 Contributing
 
-Issues and lessons learned are tracked in `.knowledge` file. Feel free to contribute improvements and alternative methods. 
+Issues and improvements are welcome! The codebase includes:
+- `instagram_scrape.py` - Main grid-based downloader
+- `instagram_downloader_carousel.py` - Enhanced carousel version
+- Cookie management system
+- Error handling and retry logic
+
+---
+
+**Disclaimer**: This tool is for educational purposes only. Users are responsible for complying with Instagram's Terms of Service and applicable laws. 
